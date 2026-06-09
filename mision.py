@@ -220,7 +220,7 @@ def setup(bot):
             # MENSAJE PRIVADO
             await interaction.response.send_message(
 
-                "Esto solo lo puedes ver tú.",
+                "No le des iniciar mision hasta que esten todos los participantes.",
 
                 view=IniciarView(
                     self,
