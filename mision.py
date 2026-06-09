@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import random
+import unicodedata
 
 def setup(bot):
 
@@ -127,6 +128,20 @@ def setup(bot):
                 and m.channel == ctx.channel
             )
 
+        # FUNCION LIMPIAR TEXTO
+        def limpiar(texto):
+
+            return "".join(
+
+                c for c in unicodedata.normalize(
+                    "NFD",
+                    texto
+                )
+
+                if unicodedata.category(c) != "Mn"
+
+            ).lower()
+
         # RANGO
         await ctx.send(
             embed=discord.Embed(
@@ -161,18 +176,28 @@ def setup(bot):
             check=check
         )
 
-        nombre_categoria = categoria_msg.content.lower()
+        nombre_categoria = categoria_msg.content
+
+        # LIMPIAR NOMBRE
+        nombre_categoria_limpio = limpiar(
+            nombre_categoria
+        )
 
         # BUSCAR CATEGORIA
         categoria = None
 
         for cat in ctx.guild.categories:
 
-            if nombre_categoria in cat.name.lower():
+            nombre_cat = limpiar(
+                cat.name
+            )
+
+            if nombre_categoria_limpio in nombre_cat:
 
                 categoria = cat
                 break
 
+        # SI NO EXISTE
         if categoria is None:
 
             await ctx.send(
@@ -194,6 +219,7 @@ def setup(bot):
             for canal in categoria.text_channels
         ]
 
+        # SI NO HAY CANALES
         if not canales:
 
             await ctx.send(
@@ -209,7 +235,9 @@ def setup(bot):
             return
 
         # CANAL RANDOM
-        canal_random = random.choice(canales)
+        canal_random = random.choice(
+            canales
+        )
 
         # DESCRIPCION
         await ctx.send(
