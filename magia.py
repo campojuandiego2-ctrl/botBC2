@@ -54,7 +54,7 @@ def setup(bot):
 
                 "color": 0x9B59B6,
 
-                "imagen": "https://cdn.discordapp.com/attachments/1490797969425825822/1513647677735174324/BF45C4FE-12B3-42BE-BAF2-4EC757239161.png?ex=6a287dc0&is=6a272c40&hm=74136ec789ef88b1404a147ec413f46f77ec974234b60b54a7d5b5a1695a8d6e&"
+                "imagen": "https://media.discordapp.net/attachments/1447807305059012639/1513730626401075240/BF45C4FE-12B3-42BE-BAF2-4EC757239161.png?ex=6a28cb01&is=6a277981&hm=66c0849dd590ef3e81e20156749cdc4bd4e762c7d678064ed6c1563d93f6c224&=&format=webp&quality=lossless&width"
             },
 
             {
@@ -70,7 +70,7 @@ def setup(bot):
 
                 "color": 0xF1C40F,
 
-                "imagen": "https://cdn.discordapp.com/attachments/1490797969425825822/1513647683275849739/F134902B-0217-46E9-9D5B-7FC7F664BFBA.png?ex=6a287dc1&is=6a272c41&hm=378371b0bbe5036c184a2d7373bef806de329c4c70bd6638681918486ecb9504&"
+                "imagen": "https://media.discordapp.net/attachments/1447807305059012639/1513729930142154956/F134902B-0217-46E9-9D5B-7FC7F664BFBA.png?ex=6a28ca5b&is=6a2778db&hm=a6c0305cb2f95a0824274f9cd3dc89f56fcd561fec2fce69b406b927a37671dc&=&format=webp&quality=lossless&width=1169&height=779"
             }
         ]
 
