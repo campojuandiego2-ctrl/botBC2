@@ -164,12 +164,14 @@ def setup(bot):
         nombre_categoria = categoria_msg.content.lower()
 
         # BUSCAR CATEGORIA
-        categoria = discord.utils.get(
+        categoria = None
 
-            ctx.guild.categories,
+        for cat in ctx.guild.categories:
 
-            name=nombre_categoria
-        )
+            if nombre_categoria in cat.name.lower():
+
+                categoria = cat
+                break
 
         if categoria is None:
 
