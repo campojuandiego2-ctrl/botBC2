@@ -76,12 +76,7 @@ def setup(bot):
             )
 
             embed.set_image(
-                url=(
-                    "https://cdn.discordapp.com/attachments/"
-                    "923040988950327359/"
-                    "1513903525581820035/"
-                    "bc4140e497cea9a20726db93ffb83db6.jpg"
-                )
+                url="https://media.discordapp.net/attachments/923040988950327359/1513903525581820035/bc4140e497cea9a20726db93ffb83db6.jpg"
             )
 
             await interaction.message.edit(
@@ -344,12 +339,7 @@ def setup(bot):
         )
 
         embed.set_image(
-            url=(
-                "https://cdn.discordapp.com/attachments/"
-                "923040988950327359/"
-                "1513903525581820035/"
-                "bc4140e497cea9a20726db93ffb83db6.jpg"
-            )
+            url="https://media.discordapp.net/attachments/923040988950327359/1513903525581820035/bc4140e497cea9a20726db93ffb83db6.jpg"
         )
 
         await canal_misiones.send(
