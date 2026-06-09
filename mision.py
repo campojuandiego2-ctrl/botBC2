@@ -339,7 +339,7 @@ def setup(bot):
         )
 
         embed.set_image(
-            url="https://imgur.com/8r6dTmJ"
+            url="https://i.pinimg.com/originals/80/a4/88/80a488dc6bca2d704932c2dd0b77d34e.gif"
         )
 
         await canal_misiones.send(
