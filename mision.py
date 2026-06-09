@@ -5,23 +5,91 @@ import unicodedata
 
 def setup(bot):
 
+    CANAL_MISIONES = 1504551609542377513
+
     class MisionView(discord.ui.View):
 
         def __init__(
             self,
+            creador,
             rango,
-            descripcion,
-            canal
+            canal_mision
         ):
 
             super().__init__(timeout=None)
 
+            self.creador = creador
             self.rango = rango
-            self.descripcion = descripcion
-            self.canal = canal
+            self.canal_mision = canal_mision
 
             self.participantes = []
 
+            self.mision_iniciada = False
+
+        # ACTUALIZAR EMBED
+        async def actualizar_embed(
+            self,
+            interaction
+        ):
+
+            participantes_texto = (
+
+                "\n".join(
+                    [
+                        f"> {u.mention}"
+                        for u in self.participantes
+                    ]
+                )
+
+                if self.participantes
+                else "*Nadie se ha unido todavía.*"
+            )
+
+            estado = (
+                "En Curso"
+                if self.mision_iniciada
+                else "En Preparación"
+            )
+
+            embed = discord.Embed(
+
+                description=(
+
+                    "## ﹒⊂NUEVA MISIÓN DISPONIBLE⊃﹑\n\n"
+
+                    "`⚠️` Una nueva misión ha sido emitida "
+                    "por el Reino del Trébol.\n\n"
+
+                    f"➤ **Rango:** {self.rango}\n"
+                    f"➤ **Canal:** {self.canal_mision.mention}\n"
+                    f"➤ **Estado:** {estado}\n"
+                    f"➤ **Participantes:**\n"
+                    f"{participantes_texto}\n\n"
+
+                    "> Los detalles completos de la misión "
+                    "serán entregados próximamente a los "
+                    "participantes seleccionados."
+
+                ),
+
+                color=0x5865F2
+            )
+
+            embed.set_image(
+                url=(
+                    "https://cdn.discordapp.com/attachments/"
+                    "923040988950327359/"
+                    "1513903525581820035/"
+                    "bc4140e497cea9a20726db93ffb83db6.jpg"
+                )
+            )
+
+            await interaction.message.edit(
+                embed=embed,
+                view=self
+            )
+
+        # BOTON UNIRSE
         @discord.ui.button(
             label="Unirse",
             style=discord.ButtonStyle.primary,
@@ -35,17 +103,21 @@ def setup(bot):
 
             usuario = interaction.user
 
-            # EVITAR DUPLICADOS
+            # YA ESTA
             if usuario in self.participantes:
 
                 await interaction.response.send_message(
-                    embed=discord.Embed(
-                        description=(
-                            "⊂❌ ▻ **MISIÓN**\n"
-                            "Ya estás en esta misión."
-                        ),
-                        color=0xFF0000
-                    ),
+                    "Ya estás en la misión.",
+                    ephemeral=True
+                )
+
+                return
+
+            # MISION INICIADA
+            if self.mision_iniciada:
+
+                await interaction.response.send_message(
+                    "La misión ya inició.",
                     ephemeral=True
                 )
 
@@ -55,67 +127,88 @@ def setup(bot):
             if len(self.participantes) >= 5:
 
                 await interaction.response.send_message(
-                    embed=discord.Embed(
-                        description=(
-                            "⊂❌ ▻ **MISIÓN LLENA**\n"
-                            "No puedes unirte."
-                        ),
-                        color=0xFF0000
-                    ),
+                    "La misión está llena.",
                     ephemeral=True
                 )
 
                 return
 
-            # AGREGAR PARTICIPANTE
-            self.participantes.append(usuario)
+            # AGREGAR
+            self.participantes.append(
+                usuario
+            )
 
-            # LISTA
-            lista = "\n".join(
+            await interaction.response.defer()
+
+            await self.actualizar_embed(
+                interaction
+            )
+
+        # BOTON INICIAR
+        @discord.ui.button(
+            label="Iniciar Misión",
+            style=discord.ButtonStyle.success,
+            emoji="🚩"
+        )
+        async def iniciar(
+            self,
+            interaction: discord.Interaction,
+            button: discord.ui.Button
+        ):
+
+            # SOLO CREADOR
+            if interaction.user != self.creador:
+
+                await interaction.response.send_message(
+                    "Solo el creador puede iniciar la misión.",
+                    ephemeral=True
+                )
+
+                return
+
+            # YA INICIO
+            if self.mision_iniciada:
+
+                await interaction.response.send_message(
+                    "La misión ya fue iniciada.",
+                    ephemeral=True
+                )
+
+                return
+
+            self.mision_iniciada = True
+
+            # DESACTIVAR BOTON UNIRSE
+            for item in self.children:
+
+                if item.label == "Unirse":
+
+                    item.disabled = True
+
+            # PING PARTICIPANTES
+            menciones = " ".join(
+
                 [
-                    f"> {u.mention}"
+                    u.mention
                     for u in self.participantes
                 ]
             )
 
-            # ESTADO
-            estado = (
-                "Completa"
-                if len(self.participantes) >= 5
-                else "Disponible"
+            await self.canal_mision.send(
+
+                f"{menciones}\n\n"
+
+                "## ⊂⚔️ MISIÓN INICIADA⊃\n\n"
+
+                "Los caballeros seleccionados "
+                "han sido convocados."
+
             )
 
-            # EMBED
-            embed = discord.Embed(
+            await interaction.response.defer()
 
-                description=(
-
-                    f"⊂📜 ▻ **MISSION AVAILABLE**\n"
-                    f"-# **Rango:** {self.rango}\n"
-                    f"-# **Estado:** {estado}\n\n"
-
-                    f"╰┈➤ `📍` **CANAL**\n"
-                    f"> {self.canal.mention}\n\n"
-
-                    f"╰┈➤ `📝` **DESCRIPCIÓN**\n"
-                    f"> {self.descripcion}\n\n"
-
-                    f"╰┈➤ `👤` **PARTICIPANTES**\n"
-                    f"{lista}"
-
-                ),
-
-                color=0x5865F2
-            )
-
-            # DESACTIVAR BOTON
-            if len(self.participantes) >= 5:
-
-                button.disabled = True
-
-            await interaction.response.edit_message(
-                embed=embed,
-                view=self
+            await self.actualizar_embed(
+                interaction
             )
 
     @bot.command()
@@ -128,7 +221,7 @@ def setup(bot):
                 and m.channel == ctx.channel
             )
 
-        # FUNCION LIMPIAR TEXTO
+        # LIMPIAR TEXTO
         def limpiar(texto):
 
             return "".join(
@@ -142,15 +235,9 @@ def setup(bot):
 
             ).lower()
 
-        # RANGO
+        # PREGUNTAR RANGO
         await ctx.send(
-            embed=discord.Embed(
-                description=(
-                    "⊂📜 ▻ **CREAR MISIÓN**\n"
-                    "¿Qué rango tendrá la misión?"
-                ),
-                color=0x5865F2
-            )
+            "¿Qué rango tendrá la misión?"
         )
 
         rango_msg = await bot.wait_for(
@@ -160,15 +247,9 @@ def setup(bot):
 
         rango = rango_msg.content
 
-        # CATEGORIA
+        # PREGUNTAR REGION
         await ctx.send(
-            embed=discord.Embed(
-                description=(
-                    "⊂📂 ▻ **CATEGORÍA**\n"
-                    "¿En qué categoría se realizará?"
-                ),
-                color=0x5865F2
-            )
+            "¿En qué región se realizará?"
         )
 
         categoria_msg = await bot.wait_for(
@@ -178,12 +259,10 @@ def setup(bot):
 
         nombre_categoria = categoria_msg.content
 
-        # LIMPIAR NOMBRE
         nombre_categoria_limpio = limpiar(
             nombre_categoria
         )
 
-        # BUSCAR CATEGORIA
         categoria = None
 
         for cat in ctx.guild.categories:
@@ -197,96 +276,91 @@ def setup(bot):
                 categoria = cat
                 break
 
-        # SI NO EXISTE
+        # NO EXISTE
         if categoria is None:
 
             await ctx.send(
-                embed=discord.Embed(
-                    description=(
-                        "⊂❌ ▻ **ERROR**\n"
-                        "No encontré esa categoría."
-                    ),
-                    color=0xFF0000
-                )
+                "No encontré esa región."
             )
 
             return
 
         # CANALES
-        canales = [
+        canales = categoria.text_channels
 
-            canal
-            for canal in categoria.text_channels
-        ]
-
-        # SI NO HAY CANALES
         if not canales:
 
             await ctx.send(
-                embed=discord.Embed(
-                    description=(
-                        "⊂❌ ▻ **ERROR**\n"
-                        "Esa categoría no tiene canales."
-                    ),
-                    color=0xFF0000
-                )
+                "Esa región no tiene canales."
             )
 
             return
 
-        # CANAL RANDOM
+        # RANDOM
         canal_random = random.choice(
             canales
         )
 
-        # DESCRIPCION
-        await ctx.send(
-            embed=discord.Embed(
-                description=(
-                    "⊂📝 ▻ **DESCRIPCIÓN**\n"
-                    "Describe la misión."
-                ),
-                color=0x5865F2
-            )
+        # CANAL MISIONES
+        canal_misiones = bot.get_channel(
+            CANAL_MISIONES
         )
 
-        descripcion_msg = await bot.wait_for(
-            "message",
-            check=check
+        # ROL MISION
+        rol_mision = discord.utils.get(
+            ctx.guild.roles,
+            name="Mision"
         )
 
-        descripcion = descripcion_msg.content
+        ping = (
+            rol_mision.mention
+            if rol_mision
+            else "@Mision"
+        )
 
-        # EMBED FINAL
+        # EMBED
         embed = discord.Embed(
 
             description=(
 
-                f"⊂📜 ▻ **MISSION AVAILABLE**\n"
-                f"-# **Rango:** {rango}\n"
-                f"-# **Estado:** Disponible\n\n"
+                "## ﹒⊂NUEVA MISIÓN DISPONIBLE⊃﹑\n\n"
 
-                f"╰┈➤ `📍` **CANAL**\n"
-                f"> {canal_random.mention}\n\n"
+                "`⚠️` Una nueva misión ha sido emitida "
+                "por el Reino del Trébol.\n\n"
 
-                f"╰┈➤ `📝` **DESCRIPCIÓN**\n"
-                f"> {descripcion}\n\n"
+                f"➤ **Rango:** {rango}\n"
+                f"➤ **Canal:** {canal_random.mention}\n"
+                f"➤ **Estado:** En Preparación\n"
+                f"➤ **Participantes:**\n"
+                f"*Nadie se ha unido todavía.*\n\n"
 
-                f"╰┈➤ `👤` **PARTICIPANTES**\n"
-                f"> *Nadie se ha unido todavía.*"
+                "> Los detalles completos de la misión "
+                "serán entregados próximamente a los "
+                "participantes seleccionados."
 
             ),
 
             color=0x5865F2
         )
 
-        await ctx.send(
+        embed.set_image(
+            url=(
+                "https://cdn.discordapp.com/attachments/"
+                "923040988950327359/"
+                "1513903525581820035/"
+                "bc4140e497cea9a20726db93ffb83db6.jpg"
+            )
+        )
+
+        await canal_misiones.send(
+
+            ping,
 
             embed=embed,
 
             view=MisionView(
+                ctx.author,
                 rango,
-                descripcion,
                 canal_random
             )
         )
