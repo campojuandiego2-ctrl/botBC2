@@ -87,6 +87,7 @@ import use
 import addrank
 import count
 import prueba
+import mision
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -161,6 +162,7 @@ addrank.setup(
 
 count.setup(bot)
 prueba.setup(bot)
+mision.setup(bot)
 
 # BOT ONLINE
 @bot.event
