@@ -7,6 +7,89 @@ def setup(bot):
 
     CANAL_MISIONES = 1504551609542377513
 
+    # BOTON PRIVADO
+    class IniciarView(discord.ui.View):
+
+        def __init__(
+            self,
+            mision_view,
+            usuario
+        ):
+
+            super().__init__(timeout=None)
+
+            self.mision_view = mision_view
+            self.usuario = usuario
+
+        @discord.ui.button(
+            label="Iniciar Misión",
+            style=discord.ButtonStyle.success,
+            emoji="🚩"
+        )
+        async def iniciar_privado(
+
+            self,
+            interaction: discord.Interaction,
+            button: discord.ui.Button
+
+        ):
+
+            # SOLO EL USUARIO
+            if interaction.user != self.usuario:
+
+                await interaction.response.send_message(
+                    "Este botón no es tuyo.",
+                    ephemeral=True
+                )
+
+                return
+
+            # YA INICIO
+            if self.mision_view.mision_iniciada:
+
+                await interaction.response.send_message(
+                    "La misión ya inició.",
+                    ephemeral=True
+                )
+
+                return
+
+            self.mision_view.mision_iniciada = True
+
+            # DESACTIVAR BOTON UNIRSE
+            for item in self.mision_view.children:
+
+                if item.label == "Unirse":
+
+                    item.disabled = True
+
+            menciones = " ".join(
+
+                [
+                    u.mention
+                    for u in self.mision_view.participantes
+                ]
+            )
+
+            await self.mision_view.canal_mision.send(
+
+                f"{menciones}\n\n"
+
+                "## ⊂⚔️ MISIÓN INICIADA⊃\n\n"
+
+                "Los caballeros seleccionados "
+                "han sido convocados."
+
+            )
+
+            await interaction.response.send_message(
+
+                "Misión iniciada.",
+
+                ephemeral=True
+            )
+
+    # SISTEMA MISION
     class MisionView(discord.ui.View):
 
         def __init__(
@@ -75,8 +158,9 @@ def setup(bot):
                 color=0x5865F2
             )
 
+            # IMG
             embed.set_image(
-                url="https://media.discordapp.net/attachments/923040988950327359/1513903525581820035/bc4140e497cea9a20726db93ffb83db6.jpg"
+                url="https://i.pinimg.com/originals/80/a4/88/80a488dc6bca2d704932c2dd0b77d34e.gif"
             )
 
             await interaction.message.edit(
@@ -133,75 +217,20 @@ def setup(bot):
                 usuario
             )
 
-            await interaction.response.defer()
+            # MENSAJE PRIVADO
+            await interaction.response.send_message(
 
-            await self.actualizar_embed(
-                interaction
+                "Esto solo lo puedes ver tú.",
+
+                view=IniciarView(
+                    self,
+                    interaction.user
+                ),
+
+                ephemeral=True
             )
 
-        # BOTON INICIAR
-        @discord.ui.button(
-            label="Iniciar Misión",
-            style=discord.ButtonStyle.success,
-            emoji="🚩"
-        )
-        async def iniciar(
-            self,
-            interaction: discord.Interaction,
-            button: discord.ui.Button
-        ):
-
-            # SOLO CREADOR
-            if interaction.user != self.creador:
-
-                await interaction.response.send_message(
-                    "Solo el creador puede iniciar la misión.",
-                    ephemeral=True
-                )
-
-                return
-
-            # YA INICIO
-            if self.mision_iniciada:
-
-                await interaction.response.send_message(
-                    "La misión ya fue iniciada.",
-                    ephemeral=True
-                )
-
-                return
-
-            self.mision_iniciada = True
-
-            # DESACTIVAR BOTON UNIRSE
-            for item in self.children:
-
-                if item.label == "Unirse":
-
-                    item.disabled = True
-
-            # PING PARTICIPANTES
-            menciones = " ".join(
-
-                [
-                    u.mention
-                    for u in self.participantes
-                ]
-            )
-
-            await self.canal_mision.send(
-
-                f"{menciones}\n\n"
-
-                "## ⊂⚔️ MISIÓN INICIADA⊃\n\n"
-
-                "Los caballeros seleccionados "
-                "han sido convocados."
-
-            )
-
-            await interaction.response.defer()
-
+            # ACTUALIZAR
             await self.actualizar_embed(
                 interaction
             )
@@ -230,7 +259,7 @@ def setup(bot):
 
             ).lower()
 
-        # PREGUNTAR RANGO
+        # RANGO
         await ctx.send(
             "¿Qué rango tendrá la misión?"
         )
@@ -242,7 +271,7 @@ def setup(bot):
 
         rango = rango_msg.content
 
-        # PREGUNTAR REGION
+        # REGION
         await ctx.send(
             "¿En qué región se realizará?"
         )
@@ -301,7 +330,7 @@ def setup(bot):
             CANAL_MISIONES
         )
 
-        # ROL MISION
+        # ROL
         rol_mision = discord.utils.get(
             ctx.guild.roles,
             name="Mision"
@@ -338,6 +367,7 @@ def setup(bot):
             color=0x5865F2
         )
 
+        # IMG
         embed.set_image(
             url="https://i.pinimg.com/originals/80/a4/88/80a488dc6bca2d704932c2dd0b77d34e.gif"
         )
