@@ -98,7 +98,7 @@ def setup(
 ╰┈➤ `🎯` **PROGRESO**
 > -# ⊩┇ESTRELLAS: **{estrellas}**
 > -# ⊩┇RANK: **{rango}**
-> -# ⊩┇TOTAL MISSIONS: **{misiones}**
+> -# ⊩┇MISIONES COMPLETADAS: **{misiones}**
 """
 
         await ctx.send(embed=embed)
