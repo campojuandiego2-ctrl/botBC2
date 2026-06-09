@@ -86,6 +86,7 @@ import addslots
 import use
 import addrank
 import count
+import prueba
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -159,7 +160,7 @@ addrank.setup(
 )
 
 count.setup(bot)
-
+prueba.setup(bot)
 
 # BOT ONLINE
 @bot.event
