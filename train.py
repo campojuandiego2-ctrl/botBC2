@@ -141,17 +141,10 @@ def setup(
         # PROBABILIDADES
         probabilidades = random.randint(1, 100)
 
-        if probabilidades <= 20:
-
-            recompensa = 2
-
-        elif probabilidades <= 60:
-
-            recompensa = 3
-
-        elif probabilidades <= 90:
+        if probabilidades <= 60:
 
             recompensa = 4
+
 
         else:
 
