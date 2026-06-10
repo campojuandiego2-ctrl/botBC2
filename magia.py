@@ -5,7 +5,7 @@ import random
 def setup(bot):
 
     @bot.command()
-    async def magia(ctx):
+    async def prueba2(ctx):
 
         rand = random.randint(1, 100)
 
