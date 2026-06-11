@@ -89,6 +89,7 @@ import count
 import prueba
 import mision
 import canales
+import roles
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -165,6 +166,7 @@ count.setup(bot)
 prueba.setup(bot)
 mision.setup(bot)
 canales.setup(bot)
+roles.setup(bot) 
 
 # BOT ONLINE
 @bot.event
