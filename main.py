@@ -15,6 +15,10 @@ bot = commands.Bot(
 
 # BASE DE DATOS
 conexion = sqlite3.connect("rpg.db")
+
+# PERMITE ACCEDER A LAS COLUMNAS POR NOMBRE
+conexion.row_factory = sqlite3.Row
+
 cursor = conexion.cursor()
 
 # TABLA JUGADORES
