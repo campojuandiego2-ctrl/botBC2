@@ -3,6 +3,7 @@ from discord.ext import commands
 import sqlite3
 import os
 
+
 # CONFIG BOT
 intents = discord.Intents.default()
 intents.message_content = True
@@ -88,6 +89,7 @@ import prueba
 import mision
 import canales
 import roles
+import say
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -151,6 +153,7 @@ prueba.setup(bot)
 mision.setup(bot)
 canales.setup(bot)
 roles.setup(bot) 
+say.setup(bot)
 
 # BOT ONLINE
 @bot.event
