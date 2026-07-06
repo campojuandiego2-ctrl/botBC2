@@ -101,8 +101,6 @@ def setup(
 ╰┈➤ `📍` **OFF-ROL**
 > -# ⊩┇Puntos Disponibles: **{puntos_disponibles}**
 > -# ⊩┇Estadísticas Totales: **{estadisticas_totales}**
-> -# ⊩┇Estrellas: **{estrellas}**
-> -# ⊩┇Misiones Completadas: **{misiones}**
 """
 
         await ctx.send(embed=embed)
