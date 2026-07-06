@@ -26,13 +26,11 @@ CREATE TABLE IF NOT EXISTS jugadores (
     puntos_disponibles INTEGER,
 
     fuerza INTEGER,
-    resistencia INTEGER,
+    vitalidad INTEGER,
     agilidad INTEGER,
     mana INTEGER,
+    inteligencia INTEGER,
     poder_magico INTEGER,
-
-    slot_hechizo INTEGER,
-    evoluciones INTEGER,
 
     estrellas INTEGER,
     rango TEXT,
@@ -40,6 +38,21 @@ CREATE TABLE IF NOT EXISTS jugadores (
 
     entrenamientos INTEGER,
     ultimo_entrenamiento TEXT
+
+)
+""")
+
+conexion.commit()
+# TABLA INVENTARIO
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS inventario (
+
+    usuario_id INTEGER,
+
+    objeto TEXT,
+
+    cantidad INTEGER
+
 )
 """)
 
@@ -49,31 +62,31 @@ conexion.commit()
 def crear_jugador(usuario_id):
 
     cursor.execute("""
-    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
 
         usuario_id,
 
-        50,
+        30,
 
-        0,
-        0,
-        0,
-        0,
-        0,
+        0,  # Fuerza
+        0,  # Vitalidad
+        0,  # Agilidad
+        0,  # Mana
+        0,  # Inteligencia
+        0,  # Poder Mágico
 
-        2,
-        0,
+        0,              # Estrellas
+        "Unranked",     # Rango
+        0,              # Misiones
 
-        0,
-        "Unranked",
-        0,
+        0,              # Entrenamientos
+        None            # Último entrenamiento
 
-        0,
-        None
     ))
 
     conexion.commit()
+       
 
 # IMPORTAR COMANDOS
 import profile_command
