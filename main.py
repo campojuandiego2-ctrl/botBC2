@@ -75,14 +75,12 @@ def crear_jugador(usuario_id):
     conexion.commit()
 
 # IMPORTAR COMANDOS
-import addevolution
 import profile_command
 import editstats
 import removestats
 import addpoints
 import removepoints
 import train
-import addslots
 import use
 import addrank
 import count
@@ -128,20 +126,6 @@ removepoints.setup(
 )
 
 train.setup(
-    bot,
-    cursor,
-    conexion,
-    crear_jugador
-)
-
-addslots.setup(
-    bot,
-    cursor,
-    conexion,
-    crear_jugador
-)
-
-addevolution.setup(
     bot,
     cursor,
     conexion,
