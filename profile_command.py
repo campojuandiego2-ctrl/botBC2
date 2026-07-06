@@ -33,42 +33,43 @@ def setup(
             jugador = cursor.fetchone()
 
         # DATOS
-        puntos_disponibles = jugador[1]
+        puntos_disponibles = jugador["puntos_disponibles"]
 
-        fuerza = jugador[2]
-        resistencia = jugador[3]
-        agilidad = jugador[4]
-        mana = jugador[5]
-        poder_magico = jugador[6]
+        fuerza = jugador["fuerza"]
+        vitalidad = jugador["vitalidad"]
+        agilidad = jugador["agilidad"]
+        mana = jugador["mana"]
+        inteligencia = jugador["inteligencia"]
+        poder_magico = jugador["poder_magico"]
 
-        slot_hechizo = jugador[7]
-        evoluciones = jugador[8]
+        estrellas = jugador["estrellas"]
+        rango = jugador["rango"]
+        misiones = jugador["misiones"]
 
-        estrellas = jugador[9]
-        rango = jugador[10]
-        misiones = jugador[11]
+        # VIDA Y MANA REALES
+        vida = vitalidad * 5
+        mana_total = mana * 5
 
-        # DEFENSA MAGICA
+        # DEFENSA MÁGICA
         defensa_magica = (
-            resistencia + poder_magico
+            vida + poder_magico
         ) // 2
 
         # TOTAL STATS
         estadisticas_totales = (
             fuerza
-            + resistencia
+            + vida
             + agilidad
-            + mana
+            + mana_total
+            + inteligencia
             + poder_magico
+            + defensa_magica
         )
 
         # EMBED
         embed = discord.Embed(
-            title=(
-                f"⊂📊` ▻ Profile de "
-                f"{ctx.author.display_name}"
-            ),
-            color=0x5865F2
+    title=f"⊂📊⊃ Estadísticas de {ctx.author.display_name}",
+    color=0x5865F2
         )
 
         # FOTO PERFIL
@@ -78,27 +79,30 @@ def setup(
 
         # DESCRIPCION
         embed.description = f"""
--# **Puntos Disponibles:** {puntos_disponibles}
--# **Estadísticas Totales:** {estadisticas_totales}
+> -# ⊩┇RANK: **{rango}**
 
 ╰┈➤ `🧮` **STATS BASE**
 > -# ⊩┇FUERZA: **{fuerza}**
-> -# ⊩┇RESISTENCIA: **{resistencia}**
+> -# ⊩┇VITALIDAD: **{vitalidad}**
 > -# ⊩┇AGILIDAD: **{agilidad}**
 > -# ⊩┇MANA: **{mana}**
+> -# ⊩┇INTELIGENCIA: **{inteligencia}**
 > -# ⊩┇PODER MÁGICO: **{poder_magico}**
 
-╰┈➤ `🛡️` **DEFENSAS**
+╰┈➤ `🎯` **TOTAL STATS**
+> -# ⊩┇FUERZA: **{fuerza}**
+> -# ⊩┇VIDA: **{vida}**
+> -# ⊩┇AGILIDAD: **{agilidad}**
+> -# ⊩┇MANA: **{mana_total}**
+> -# ⊩┇INTELIGENCIA: **{inteligencia}**
+> -# ⊩┇PODER MÁGICO: **{poder_magico}**
 > -# ⊩┇DEFENSA MÁGICA: **{defensa_magica}**
 
-╰┈➤ `📕` **GRIMORIO**
-> -# ⊩┇SLOTS DE HECHIZO: **{slot_hechizo}**
-> -# ⊩┇EVOLUCIONES: **{evoluciones}**
-
-╰┈➤ `🎯` **PROGRESO**
-> -# ⊩┇ESTRELLAS: **{estrellas}**
-> -# ⊩┇RANK: **{rango}**
-> -# ⊩┇MISIONES COMPLETADAS: **{misiones}**
+╰┈➤ `📍` **OFF-ROL**
+> -# ⊩┇Puntos Disponibles: **{puntos_disponibles}**
+> -# ⊩┇Estadísticas Totales: **{estadisticas_totales}**
+> -# ⊩┇Estrellas: **{estrellas}**
+> -# ⊩┇Misiones Completadas: **{misiones}**
 """
 
         await ctx.send(embed=embed)
