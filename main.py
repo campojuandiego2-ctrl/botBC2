@@ -67,12 +67,12 @@ conexion.commit()
 def crear_jugador(usuario_id):
 
     cursor.execute("""
-    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
 
         usuario_id,
 
-        0,      # Oro
+        500,      # Oro
         0,      # EXP
         30,
 
@@ -169,13 +169,18 @@ addrank.setup(
     crear_jugador
 )
 
+shop.setup(
+    bot,
+    cursor,
+    conexion,
+    crear_jugador
+)
 count.setup(bot)
 prueba.setup(bot)
 mision.setup(bot)
 canales.setup(bot)
 roles.setup(bot) 
 saycomands.setup(bot)
-shop.setup(bot)
 
 # BOT ONLINE
 @bot.event
