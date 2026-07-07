@@ -296,7 +296,12 @@ class ShopView(discord.ui.View):
 # COMANDO SHOP
 # ==========================================
 
-def setup(bot):
+def setup(
+    bot,
+    cursor,
+    conexion,
+    crear_jugador
+):
 
     @bot.command()
     async def shop(ctx):
