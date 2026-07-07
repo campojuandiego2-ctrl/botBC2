@@ -26,7 +26,8 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS jugadores (
 
     usuario_id INTEGER,
-
+    oro INTEGER,
+    exp INTEGER,
     puntos_disponibles INTEGER,
 
     fuerza INTEGER,
@@ -66,11 +67,13 @@ conexion.commit()
 def crear_jugador(usuario_id):
 
     cursor.execute("""
-    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO jugadores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
 
         usuario_id,
 
+        0,      # Oro
+        0,      # EXP
         30,
 
         0,  # Fuerza
@@ -107,6 +110,7 @@ import mision
 import canales
 import roles
 import saycomands
+import shop
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -171,6 +175,7 @@ mision.setup(bot)
 canales.setup(bot)
 roles.setup(bot) 
 saycomands.setup(bot)
+shop.setup(bot)
 
 # BOT ONLINE
 @bot.event
