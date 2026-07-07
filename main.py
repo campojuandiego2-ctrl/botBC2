@@ -111,6 +111,7 @@ import canales
 import roles
 import saycomands
 import shop
+import bal
 
 # SETUP COMANDOS
 profile_command.setup(
@@ -170,6 +171,13 @@ addrank.setup(
 )
 
 shop.setup(
+    bot,
+    cursor,
+    conexion,
+    crear_jugador
+)
+
+bal.setup(
     bot,
     cursor,
     conexion,
